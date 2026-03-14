@@ -48,9 +48,41 @@ Authorization: Bearer <access_token>
 
 | Метод | Путь | Описание | Требование |
 |-------|------|----------|------------|
+| POST | `/api/auth/register` | Регистрация (роль SELLER или BUYER; админ создаётся при старте) | — |
 | POST | `/api/auth/login` | Вход в личный кабинет (продавец/покупатель/администратор) | R1.1, R0.1 |
 | POST | `/api/auth/logout` | Выход, инвалидация токена | — |
 | GET  | `/api/auth/me`     | Текущий пользователь (роль, id, профиль) | R0.1 |
+
+### POST /api/auth/register
+
+**Важно:** путь именно `/api/auth/register` (не `/api/register`).
+
+**Request body:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "secret",
+  "role": "SELLER"
+}
+```
+
+`role`: только **SELLER** или **BUYER** (ADMIN регистрацией создать нельзя).
+
+**Response 201:**
+
+```json
+{
+  "id": 2,
+  "email": "user@example.com",
+  "role": "SELLER",
+  "createdAt": "2025-03-14T12:00:00Z"
+}
+```
+
+**Response 400** — неверная роль (ADMIN), email уже занят или ошибка валидации.
+
+---
 
 ### POST /api/auth/login
 
