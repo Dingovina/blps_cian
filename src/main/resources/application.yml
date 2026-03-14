@@ -1,0 +1,39 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /cian
+
+spring:
+  application:
+    name: cian
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cian
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: public
+    open-in-view: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:cianSecretKeyForDevelopmentOnlyChangeInProduction}
+    expiration-ms: 86400000
+  admin:
+    email: admin@cian.local
+    password: admin123
+  listing:
+    publication-days: 30
+    archive-grace-days: 7
