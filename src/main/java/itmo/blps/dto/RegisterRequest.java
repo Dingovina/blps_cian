@@ -8,7 +8,8 @@ import itmo.blps.entity.UserRole;
 public class RegisterRequest {
 
     @NotBlank(message = "Email is required")
-    @Email
+    @Email(regexp = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$",
+           message = "Invalid email address")
     private String email;
 
     @NotBlank(message = "Password is required")
