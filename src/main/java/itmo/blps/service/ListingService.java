@@ -71,10 +71,13 @@ public class ListingService {
     }
 
     @Transactional
-    public Listing publish(Long id, User seller, boolean forceReject) {
-        Listing l = getListingOwnedBy(id, seller);
+    public Listing publish(Long id, boolean forceReject) {
+        Listing l = getById(id);
         if (l.getStatus() != ListingStatus.DRAFT) {
-            throw new BadRequestException("Only DRAFT listings can be published");
+            throw new BadRequestException(
+                    "Объявление #" + id + " уже опубликовано или недоступно для публикации " +
+                    "(текущий статус: " + l.getStatus().name() + "). " +
+                    "Публиковать можно только черновики (DRAFT).");
         }
         if (forceReject) {
             throw new BadRequestException("Объявление не соответствует требованиям площадки и не может быть опубликовано");

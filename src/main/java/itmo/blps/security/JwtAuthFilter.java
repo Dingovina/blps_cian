@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -33,8 +33,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(token) && jwtUtils.validateToken(token)) {
                 Long userId = jwtUtils.getUserIdFromToken(token);
                 userRepository.findById(userId).ifPresent(user -> {
+                    var authority = new org.springframework.security.core.authority.SimpleGrantedAuthority(
+                            "ROLE_" + user.getRole().name());
                     UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                            new UsernamePasswordAuthenticationToken(user, null, List.of(authority));
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 });
             }

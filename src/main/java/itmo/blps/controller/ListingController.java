@@ -64,20 +64,6 @@ public class ListingController {
         return ResponseEntity.ok(resp);
     }
 
-    @PostMapping("/listings/{id}/publish")
-    public ResponseEntity<?> publish(@PathVariable Long id,
-                                     @RequestBody(required = false) PublishRequest request,
-                                     @AuthenticationPrincipal User user) {
-        boolean forceReject = request != null && request.isForceReject();
-        Listing l = listingService.publish(id, user, forceReject);
-        var body = new java.util.LinkedHashMap<String, Object>();
-        body.put("id", l.getId());
-        body.put("status", l.getStatus().name());
-        body.put("publishedAt", l.getPublishedAt());
-        body.put("message", "Объявление размещено. Доступно платное продвижение (Топ/Премиум).");
-        return ResponseEntity.ok(body);
-    }
-
     @PostMapping("/listings/{id}/promotion/choice")
     public ResponseEntity<?> promotionChoice(@PathVariable Long id,
                                              @RequestBody java.util.Map<String, Boolean> body,

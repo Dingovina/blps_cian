@@ -89,6 +89,19 @@ public class AdminController {
         return ResponseEntity.ok(new PageResponse<>(content, p.getTotalElements(), p.getTotalPages(), p.getNumber(), p.getSize()));
     }
 
+    @PostMapping("/listings/{id}/publish")
+    public ResponseEntity<?> publishListing(@PathVariable Long id,
+                                            @RequestBody(required = false) itmo.blps.dto.PublishRequest request) {
+        boolean forceReject = request != null && request.isForceReject();
+        Listing l = listingService.publish(id, forceReject);
+        var body = new java.util.LinkedHashMap<String, Object>();
+        body.put("id", l.getId());
+        body.put("status", l.getStatus().name());
+        body.put("publishedAt", l.getPublishedAt());
+        body.put("message", "Объявление размещено. Доступно платное продвижение (Топ/Премиум).");
+        return ResponseEntity.ok(body);
+    }
+
     @PatchMapping("/listings/{id}/status")
     public ResponseEntity<ListingResponse> setListingStatus(@PathVariable Long id,
                                                              @Valid @RequestBody AdminListingStatusRequest request) {
