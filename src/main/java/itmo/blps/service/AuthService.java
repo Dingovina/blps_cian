@@ -1,7 +1,6 @@
 package itmo.blps.service;
 
 import itmo.blps.dto.LoginRequest;
-import itmo.blps.dto.LoginResponse;
 import itmo.blps.dto.RegisterRequest;
 import itmo.blps.dto.UserResponse;
 import itmo.blps.entity.User;
@@ -44,19 +43,13 @@ public class AuthService {
         return UserResponse.from(user);
     }
 
-    public LoginResponse login(LoginRequest request) {
+    public String login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail().trim().toLowerCase())
                 .orElseThrow(() -> new org.springframework.security.authentication.BadCredentialsException("Invalid credentials"));
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new org.springframework.security.authentication.BadCredentialsException("Invalid credentials");
         }
-        String token = jwtUtils.generateToken(user);
-        LoginResponse response = new LoginResponse();
-        response.setAccessToken(token);
-        response.setTokenType("Bearer");
-        response.setExpiresIn(jwtUtils.getExpirationMs() / 1000);
-        response.setUser(UserResponse.from(user));
-        return response;
+        return jwtUtils.generateToken(user);
     }
 
     public UserResponse me(User user) {

@@ -1,7 +1,6 @@
 package itmo.blps.controller;
 
 import itmo.blps.dto.LoginRequest;
-import itmo.blps.dto.LoginResponse;
 import itmo.blps.dto.RegisterRequest;
 import itmo.blps.dto.UserResponse;
 import itmo.blps.entity.User;
@@ -29,8 +28,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<java.util.Map<String, String>> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(java.util.Map.of("accessToken", authService.login(request)));
     }
 
     @GetMapping("/me")
