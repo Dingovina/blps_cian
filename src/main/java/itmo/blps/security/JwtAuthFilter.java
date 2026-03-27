@@ -1,7 +1,5 @@
 package itmo.blps.security;
 
-import itmo.blps.entity.User;
-import itmo.blps.entity.UserRole;
 import itmo.blps.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

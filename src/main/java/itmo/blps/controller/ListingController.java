@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,17 +128,12 @@ public class ListingController {
 
     @GetMapping("/listings/search")
     public ResponseEntity<PageResponse<ListingResponse>> search(
-            @RequestParam(required = false) String region,
-            @RequestParam(required = false) BigDecimal minPrice,
-            @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) Integer rooms,
-            @RequestParam(required = false) BigDecimal minAreaSqm,
-            @RequestParam(required = false) BigDecimal maxAreaSqm,
+            @RequestParam(required = false) List<String> filter,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.desc("promotion"), Sort.Order.desc("publishedAt")));
-        var p = listingService.search(region, minPrice, maxPrice, rooms, minAreaSqm, maxAreaSqm, pageable);
+        var p = listingService.search(filter, pageable);
         List<ListingResponse> content = p.getContent().stream().map(ListingResponse::from).collect(Collectors.toList());
         PageResponse<ListingResponse> resp = new PageResponse<>(
                 content, p.getTotalElements(), p.getTotalPages(), p.getNumber(), p.getSize());

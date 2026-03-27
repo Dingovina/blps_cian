@@ -6,13 +6,13 @@ import itmo.blps.exception.BadRequestException;
 import itmo.blps.exception.ForbiddenException;
 import itmo.blps.exception.ResourceNotFoundException;
 import itmo.blps.repository.ListingRepository;
+import itmo.blps.specification.ListingSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -137,10 +137,9 @@ public class ListingService {
         return l;
     }
 
-    public Page<Listing> search(String region, BigDecimal minPrice, BigDecimal maxPrice,
-                                Integer rooms, BigDecimal minAreaSqm, BigDecimal maxAreaSqm,
-                                Pageable pageable) {
-        return listingRepository.searchActive(region, minPrice, maxPrice, rooms, minAreaSqm, maxAreaSqm, pageable);
+    public Page<Listing> search(List<String> filters, Pageable pageable) {
+        Specification<Listing> spec = ListingSpecification.fromFilter(filters);
+        return listingRepository.findAll(spec, pageable);
     }
 
     public List<Listing> findActiveWithExpiresAtBefore(Instant threshold) {
