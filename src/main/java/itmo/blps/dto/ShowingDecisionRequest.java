@@ -1,6 +1,7 @@
 package itmo.blps.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
 public class ShowingDecisionRequest {
@@ -12,9 +13,11 @@ public class ShowingDecisionRequest {
 
     // used when decision = CONFIRM
     private Instant scheduledAt;
+    @Size(max = 500, message = "Contact info must not exceed 500 characters")
     private String contactInfo;
 
     // used when decision = REJECT
+    @Size(max = 2000, message = "Reason must not exceed 2000 characters")
     private String reason;
 
     public Decision getDecision() {
