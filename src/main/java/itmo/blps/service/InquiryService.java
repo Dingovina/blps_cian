@@ -41,6 +41,9 @@ public class InquiryService {
         if (listing.getSeller().getId().equals(buyer.getId())) {
             throw new BadRequestException("Cannot create inquiry for your own listing");
         }
+        if (inquiryRepository.existsByListingIdAndBuyerId(listingId, buyer.getId())) {
+            throw new BadRequestException("You already have an inquiry for this listing");
+        }
         Inquiry inquiry = new Inquiry();
         inquiry.setListing(listing);
         inquiry.setBuyer(buyer);

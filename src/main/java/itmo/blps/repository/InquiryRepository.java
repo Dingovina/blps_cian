@@ -22,6 +22,8 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
     @Query("SELECT i FROM Inquiry i WHERE i.listing.seller.id = :sellerId AND i.status = :status")
     Page<Inquiry> findBySellerIdAndStatus(@Param("sellerId") Long sellerId, @Param("status") InquiryStatus status, Pageable pageable);
 
+    boolean existsByListingIdAndBuyerId(Long listingId, Long buyerId);
+
     Page<Inquiry> findByListingIdAndBuyerId(Long listingId, Long buyerId, Pageable pageable);
 
     @Query("SELECT i FROM Inquiry i WHERE i.listing.id = :listingId AND i.listing.seller.id = :sellerId")
