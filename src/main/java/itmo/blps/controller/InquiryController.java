@@ -1,6 +1,10 @@
 package itmo.blps.controller;
 
-import itmo.blps.dto.*;
+import itmo.blps.dto.InquiryCreateRequest;
+import itmo.blps.dto.InquiryResponse;
+import itmo.blps.dto.PageResponse;
+import itmo.blps.dto.ShowingDecisionRequest;
+import itmo.blps.dto.VisitResultRequest;
 import itmo.blps.entity.Inquiry;
 import itmo.blps.entity.InquiryStatus;
 import itmo.blps.entity.User;
@@ -72,28 +76,19 @@ public class InquiryController {
         return ResponseEntity.ok(resp);
     }
 
-    @PostMapping("/inquiries/{id}/confirm-showing")
-    public ResponseEntity<?> confirmShowing(@PathVariable Long id,
-                                            @RequestBody(required = false) ConfirmShowingRequest request,
-                                            @AuthenticationPrincipal User user) {
-        Inquiry i = inquiryService.confirmShowing(id, user,
-                request != null ? request.getScheduledAt() : null,
-                request != null ? request.getContactInfo() : null);
+    @PostMapping("/inquiries/{id}/showing-decision")
+    public ResponseEntity<?> showingDecision(@PathVariable Long id,
+                                             @Valid @RequestBody ShowingDecisionRequest request,
+                                             @AuthenticationPrincipal User user) {
+        Inquiry i = inquiryService.resolveShowing(id, user,
+                request.getDecision(),
+                request.getScheduledAt(),
+                request.getContactInfo(),
+                request.getReason());
         var body = new java.util.LinkedHashMap<String, Object>();
         body.put("inquiryId", i.getId());
         body.put("status", i.getStatus().name());
         body.put("scheduledAt", i.getScheduledAt());
-        return ResponseEntity.ok(body);
-    }
-
-    @PostMapping("/inquiries/{id}/reject-showing")
-    public ResponseEntity<?> rejectShowing(@PathVariable Long id,
-                                          @RequestBody(required = false) RejectShowingRequest request,
-                                          @AuthenticationPrincipal User user) {
-        Inquiry i = inquiryService.rejectShowing(id, user, request != null ? request.getReason() : null);
-        var body = new java.util.LinkedHashMap<String, Object>();
-        body.put("inquiryId", i.getId());
-        body.put("status", i.getStatus().name());
         return ResponseEntity.ok(body);
     }
 

@@ -103,6 +103,17 @@ public class InquiryService {
     }
 
     @Transactional
+    public Inquiry resolveShowing(Long inquiryId, User seller,
+                                  itmo.blps.dto.ShowingDecisionRequest.Decision decision,
+                                  Instant scheduledAt, String contactInfo, String reason) {
+        if (decision == itmo.blps.dto.ShowingDecisionRequest.Decision.CONFIRM) {
+            return confirmShowing(inquiryId, seller, scheduledAt, contactInfo);
+        } else {
+            return rejectShowing(inquiryId, seller, reason);
+        }
+    }
+
+    @Transactional
     public Inquiry confirmShowing(Long inquiryId, User seller, Instant scheduledAt, String contactInfo) {
         Inquiry i = getInquiryOwnedBySeller(inquiryId, seller);
         if (i.getStatus() != InquiryStatus.PENDING) {
